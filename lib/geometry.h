@@ -3,6 +3,10 @@
  
 // To be used with video mode 3
 
-void draw_line(int x1, y1, x2, y2, color);
+#define pos(x, y) ((x) + (y)*240)
+
+void draw_pixel(short x, short y, short color, volatile unsigned short* screen);
+void draw_around_pixel(short x, short y, short color, volatile unsigned short* screen);
+void draw_line(short x1, short y1, short x2, short y2, short color, volatile unsigned short* screen);
  
 #endif

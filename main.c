@@ -1,7 +1,6 @@
 #include "lib/hardware_consts/gba_memory_map.h"
 #include "lib/hardware_consts/gba_io_registers.h"
-
-#define pos(x, y) ((x) + (y)*240)
+#include "lib/geometry.h"
 
 void circle(volatile unsigned short* vram, int x, int y) {
   // .xxx.
@@ -66,6 +65,13 @@ int main(void) {
   volatile unsigned short* const KEYINPUT = (unsigned short*)(IO_REGISTERS_KEYINPUT_ADDR);
   volatile unsigned char*  const VCOUNT = (unsigned char*)(IO_REGISTERS_VCOUNT_ADDR);
 
+  draw_line(90, 90, 90, 110, 0xFF, VRAM);
+  draw_line(90, 90, 110, 90, 0xFF, VRAM);
+  draw_line(110, 110, 90, 110, 0xFF, VRAM);
+  draw_line(110, 110, 110, 90, 0xFF, VRAM);
+  draw_line(90, 90, 110, 110, 0xFFFF, VRAM);
+  draw_line(90, 110, 110, 90, 0xFFFF, VRAM);
+
 
   // Init radio buttons
   struct RadioButton rbs[10];
@@ -80,12 +86,9 @@ int main(void) {
   //Enter game loop
   while(1) {
     unsigned int key_states;
-    // Skip past the rest of any current V-Blank, then skip past
-    // the V-Draw
-    while(*VCOUNT >= 160);
-    while(*VCOUNT < 160);
+    VCOUNT_WAIT_FOR_NEXT_FRAME();
 
-    key_states = ~(*KEYINPUT) & KEYINPUT_ANY;
+    key_states = GET_KEYINPUT(KEYINPUT_ANY);
 
     for (unsigned int i = 0, j = 1; i < 10; i++, j = j*2) {
       rbs[i].on = key_states & j;

@@ -1,13 +1,14 @@
 #ifndef GBA_IO_REGISTERS
 #define GBA_IO_REGISTERS
 
-//DISPCNT masks defined in gba_video_modes.h
+
 #define IO_REGISTERS_DISPCNT_ADDR  IO_REGISTERS_ADDR + 0x0
 #define IO_REGISTERS_VCOUNT_ADDR   IO_REGISTERS_ADDR + 0x6
 #define IO_REGISTERS_KEYINPUT_ADDR IO_REGISTERS_ADDR + 0x130
 
 
-// DISPCNT Masks/Utils
+/* DISPCNT Masks/Utils */
+
 #define DISPCNT_BG_MODE     0x7
 #define DISPCNT_DISPLAY_BG0 (1 << 8)
 #define DISPCNT_DISPLAY_BG1 (1 << 9)
@@ -22,7 +23,15 @@
 #define SET_VIDEO_MODE_3() (*((volatile unsigned short *)(IO_REGISTERS_DISPCNT_ADDR))) = (DISPCNT_BG_MODE_3 | DISPCNT_DISPLAY_BG2)
 
 
-// KEYINPUT Masks/Utils
+/* VCOUNT Utils */
+// Skip past the rest of any current V-Blank, then skip past the V-Draw
+#define VCOUNT_WAIT_FOR_NEXT_FRAME() { while(*VCOUNT >= 160); while(*VCOUNT < 160); }
+
+
+/* KEYINPUT Masks/Utils */
+
+#define GET_KEYINPUT(mask) (~(*((volatile unsigned short *)(IO_REGISTERS_KEYINPUT_ADDR))) & mask)
+
 // 0 means pressed, 1 means released
 #define KEYINPUT_A        0x0001
 #define KEYINPUT_B        0x0002
@@ -36,7 +45,5 @@
 #define KEYINPUT_L        0x0200
 
 #define KEYINPUT_ANY      0x03FF
-
-
 
 #endif
