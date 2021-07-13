@@ -1,22 +1,7 @@
+#include "lib/hardware_consts/gba_memory_map.h"
+#include "lib/hardware_consts/gba_io_registers.h"
+
 #define pos(x, y) ((x) + (y)*240)
-
-#define MEM_IO 0x04000000
-#define REG_DISPLAY        (*((volatile unsigned int *)(MEM_IO)))
-#define REG_DISPLAY_VCOUNT (*((volatile unsigned int *)(MEM_IO + 0x0006)))
-#define REG_KEY_INPUT      (*((volatile unsigned int *)(MEM_IO + 0x0130)))
-
-#define BUTTON_A 0x0001
-#define BUTTON_B 0x0002
-#define SELECT   0x0004
-#define START    0x0008
-#define RIGHT    0x0010
-#define LEFT     0x0020
-#define UP       0x0040
-#define DOWN     0x0080
-#define BUTTON_R 0x0100
-#define BUTTON_L 0x0200
-
-#define ALL_BUTTONS 0x03FF
 
 void circle(volatile unsigned short* vram, int x, int y) {
   // .xxx.
@@ -74,13 +59,13 @@ void toggle_RadioButton(volatile unsigned short* vram, struct RadioButton rb) {
 }
 
 int main(void) {
-  // Write into the I/O registers, setting video display parameters.
-  volatile unsigned char* ioram= (unsigned char*)0x04000000;
-  ioram[0] =0x03; // Use video mode 3 (in BG2, a 16bpp bitmap in VRAM)
-  ioram[1] =0x04; // Enable BG2 (BG0 = 1, BG1 = 2, BG2 = 4, ...)
+  //Set video mode
+  SET_VIDEO_MODE_3();
 
-  // Write pixel colours into VRAM
-  volatile unsigned short* vram= (unsigned short*)0x06000000;
+  volatile unsigned short* const VRAM = (unsigned short*)VRAM_ADDR;
+  volatile unsigned short* const KEYINPUT = (unsigned short*)(IO_REGISTERS_KEYINPUT_ADDR);
+  volatile unsigned char*  const VCOUNT = (unsigned char*)(IO_REGISTERS_VCOUNT_ADDR);
+
 
   // Init radio buttons
   struct RadioButton rbs[10];
@@ -89,22 +74,22 @@ int main(void) {
     rbs[i].x = 90 + i*6;
     rbs[i].y = 80;
     rbs[i].on = 0;
-    paint_RadioButton(vram, rbs[i]);
+    paint_RadioButton(VRAM, rbs[i]);
   }
 
-  // Wait forever
+  //Enter game loop
   while(1) {
-    unsigned int key_states = 0;
+    unsigned int key_states;
     // Skip past the rest of any current V-Blank, then skip past
     // the V-Draw
-    while(REG_DISPLAY_VCOUNT >= 160);
-    while(REG_DISPLAY_VCOUNT < 160);
+    while(*VCOUNT >= 160);
+    while(*VCOUNT < 160);
 
-    key_states = ~REG_KEY_INPUT & ALL_BUTTONS;
+    key_states = ~(*KEYINPUT) & KEYINPUT_ANY;
 
     for (unsigned int i = 0, j = 1; i < 10; i++, j = j*2) {
       rbs[i].on = key_states & j;
-      paint_RadioButton_state(vram, rbs[i]);
+      paint_RadioButton_state(VRAM, rbs[i]);
     }
   }
 
