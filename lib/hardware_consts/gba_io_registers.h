@@ -24,8 +24,12 @@
 
 
 /* VCOUNT Utils */
+
 // Skip past the rest of any current V-Blank, then skip past the V-Draw
-#define VCOUNT_WAIT_FOR_NEXT_FRAME() { while(*VCOUNT >= 160); while(*VCOUNT < 160); }
+#define VCOUNT_WAIT_FOR_NEXT_FRAME() {\
+  while(*((volatile unsigned char *) (IO_REGISTERS_VCOUNT_ADDR)) >= 160);\
+  while(*((volatile unsigned char *) (IO_REGISTERS_VCOUNT_ADDR)) < 160);\
+}
 
 
 /* KEYINPUT Masks/Utils */
