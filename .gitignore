@@ -1,5 +1,6 @@
-# GBA executable
+# GBA stuff
 *.gba
+*.sav
 
 ## GitHub's default c .gitignore
 # Prerequisites
