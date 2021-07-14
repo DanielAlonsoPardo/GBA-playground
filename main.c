@@ -13,53 +13,52 @@ int main(void) {
   volatile unsigned short* const VRAM = (unsigned short*)VRAM_ADDR;
 
   #define MAX_LINES 30
-  struct Lines {
-    short x1[MAX_LINES];
-    short y1[MAX_LINES];
-    short x2[MAX_LINES];
-    short y2[MAX_LINES];
-    short color[MAX_LINES];
-    short total;
-  } lines;
-  lines.total = 0;
-
+  struct Line {
+    short x1;
+    short y1;
+    short x2;
+    short y2;
+    short color;
+  } lines[MAX_LINES];
+  short total_lines = 0;
+  
   srand(0);
-
+  
   //Enter game loop
   unsigned short frame_counter = 0;
   while(1) {
     short current_line = frame_counter % MAX_LINES;
     VCOUNT_WAIT_FOR_NEXT_FRAME();
-
+  
     //Add a line to the lines structure
     //If it's full, replace an existing line instead.
-    if (lines.total < MAX_LINES) {
+    if (total_lines < MAX_LINES) {
       //add line
-      lines.x1[lines.total] = rand() % 240;
-      lines.y1[lines.total] = rand() % 160;
-      lines.x2[lines.total] = rand() % 240;
-      lines.y2[lines.total] = rand() % 160;
-      lines.color[lines.total] = rand();
+      lines[total_lines].x1 = rand() % 240;
+      lines[total_lines].y1 = rand() % 160;
+      lines[total_lines].x2 = rand() % 240;
+      lines[total_lines].y2 = rand() % 160;
+      lines[total_lines].color = rand();
 
-      lines.total++;
+      total_lines++;
     } else {
       //replace preexisting line
 
       //erase it first
-      draw_line(lines.x1[current_line], lines.y1[current_line], lines.x2[current_line], lines.y2[current_line], 0, VRAM);
+      draw_line(lines[current_line].x1, lines[current_line].y1, lines[current_line].x2, lines[current_line].y2, 0, VRAM);
 
-      lines.x1[current_line] = rand() % 240;
-      lines.y1[current_line] = rand() % 160;
-      lines.x2[current_line] = rand() % 240;
-      lines.y2[current_line] = rand() % 160;
-      lines.color[current_line] = rand();
+      lines[current_line].x1 = rand() % 240;
+      lines[current_line].y1 = rand() % 160;
+      lines[current_line].x2 = rand() % 240;
+      lines[current_line].y2 = rand() % 160;
+      lines[current_line].color = rand();
     }
 
 
 
     //Draw all lines
-    for (short i = 0; i < lines.total; i++)
-      draw_line(lines.x1[i], lines.y1[i], lines.x2[i], lines.y2[i], lines.color[i], VRAM);
+    for (short i = 0; i < total_lines; i++)
+      draw_line(lines[i].x1, lines[i].y1, lines[i].x2, lines[i].y2, lines[i].color, VRAM);
 
     frame_counter++;
   }
