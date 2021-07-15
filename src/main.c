@@ -52,13 +52,14 @@ int main(void) {
       lines[current_line].x2 = rand() % 240;
       lines[current_line].y2 = rand() % 160;
       lines[current_line].color = rand();
+      draw_line(lines[current_line].x1, lines[current_line].y1, lines[current_line].x2, lines[current_line].y2, lines[current_line].color, VRAM);
     }
 
 
 
     //Draw all lines
-    for (short i = 0; i < total_lines; i++)
-      draw_line(lines[i].x1, lines[i].y1, lines[i].x2, lines[i].y2, lines[i].color, VRAM);
+//    for (short i = 0; i < total_lines; i++)
+//      draw_line(lines[i].x1, lines[i].y1, lines[i].x2, lines[i].y2, lines[i].color, VRAM);
 
     frame_counter++;
   }
