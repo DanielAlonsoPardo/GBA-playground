@@ -23,7 +23,7 @@ int main(void) {
   short total_lines = 0;
   
   srand(0);
-  
+
   //Enter game loop
   unsigned short frame_counter = 0;
   while(1) {

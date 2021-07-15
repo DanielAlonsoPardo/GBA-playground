@@ -52,8 +52,8 @@ void draw_line(short x1, short y1, short x2, short y2, short color, volatile uns
   short brush_x = x1;
   short brush_y = y1;
 
-  short brush_angle = 0;
-  short true_angle = 0;
+  int brush_angle = 0; //The angles must be stored in ints instead of shorts as they might grow very quickly.
+  int true_angle = 0;
   short brush_angle_increase = more_y * diff_x;
   short brush_angle_decrease = less_y * diff_x;
   short true_angle_increase = more_x * diff_y;
