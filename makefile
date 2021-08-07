@@ -10,19 +10,24 @@ LDFLAGS := -mthumb-interwork -mthumb -specs=gba.specs -lm
 
 SOURCES := $(shell find $(SRC_DIR) -type f -name '*.c')
 OBJECTS := $(SOURCES:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
+ASSEMBLY_FILES := $(SOURCES:$(SRC_DIR)%.c=$(OBJ_DIR)%.s)
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-
-main.elf: $(OBJECTS)
-	$(CC) $(OBJECTS) -o main.elf $(LDFLAGS) $(DEBUG)
 
 main.gba: main.elf
 	arm-none-eabi-objcopy -v -O binary main.elf main.gba
 	gbafix main.gba
 
+main.elf: $(OBJECTS)
+	$(CC) $(OBJECTS) -o main.elf $(LDFLAGS) $(DEBUG)
+
 $(OBJECTS): $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	mkdir -p $(shell dirname $@)
 	$(CC) -c $< -o $@ $(CFLAGS) $(DEBUG)
+
+$(ASSEMBLY_FILES): $(OBJ_DIR)%.s : $(SRC_DIR)%.c
+	mkdir -p $(shell dirname $@)
+	$(CC) -c $< -o $@ $(CFLAGS) $(DEBUG) -S -fverbose-asm
 
 exec: main.gba
 	mgba-qt main.gba
@@ -33,7 +38,7 @@ debug: main.elf
 	arm-none-eabi-gdb
 
 clean:
-	rm -f *.elf *.o *.gba *.sav
+	rm -f *.elf *.o *.gba *.sav *.s
 	rm -fr obj/
 
-
+assembly: $(ASSEMBLY_FILES)

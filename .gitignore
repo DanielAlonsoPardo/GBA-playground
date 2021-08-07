@@ -2,6 +2,9 @@
 *.gba
 *.sav
 
+# Assembly files
+*.s
+
 ## GitHub's default c .gitignore
 # Prerequisites
 *.d

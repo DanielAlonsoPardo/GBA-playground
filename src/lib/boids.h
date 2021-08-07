@@ -12,9 +12,10 @@ typedef struct VECTOR{
 } Vector;
 
 typedef struct BOID{
-  Vector position;
-  double direction; // in radians
-  double speed; // in pixels
+  Vector position; // Current position of this boid. Should always be within gameboy screen bounds.
+  Vector last_position; // Position of the boid during the previous tick. Used for erasing boids.
+  double direction; // In radians
+  double speed; // In pixels per tick
   short color;
 } Boid;
 
@@ -52,6 +53,11 @@ void init_boid(Boid* boid);
 /*** phys_tick
  * Performs one tick of the "physics" engine
  */
-void boids_phys_tick(Boid_flock* flock, Mem_ptr screen);
+void boids_phys_tick(Boid_flock* flock);
+
+/*** boids_paint_frame
+ * Redraws screen
+ */
+void boids_paint_frame(Boid_flock* flock, Mem_ptr screen);
 
 #endif

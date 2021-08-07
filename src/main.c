@@ -5,7 +5,7 @@
 #include "lib/boids.h"
 #include "lib/geometry.h"
 
-#define MAX_BOIDS 10
+#define MAX_BOIDS 50
 
 int main(void) {
   //Init
@@ -30,7 +30,8 @@ int main(void) {
 
 
     VCOUNT_WAIT_FOR_NEXT_FRAME();
-    boids_phys_tick(&flock, VRAM);
+    boids_phys_tick(&flock);
+    boids_paint_frame(&flock, VRAM);
   }
 
   return 0;
