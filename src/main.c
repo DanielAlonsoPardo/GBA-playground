@@ -8,27 +8,19 @@
 #define MAX_BOIDS 50
 
 int main(void) {
-  //Init
+  const Mem_ptr VRAM = (unsigned short*)VRAM_ADDR;
+  //Set video mode
+  SET_VIDEO_MODE_3();
+
+  //Init boids
   Boid boids[MAX_BOIDS];
   Boid_flock flock;
   flock.boids = boids;
   flock.n = MAX_BOIDS;
-  for (int i = 0; i < MAX_BOIDS; i++) {
-    init_boid(&flock.boids[i]);
-  }
+  init_boid_all(&flock);
 
-  //Set video mode
-  SET_VIDEO_MODE_3();
-
-  const Mem_ptr VRAM = (unsigned short*)VRAM_ADDR;
-  srand(0);
-
-
-  draw_around_pixel(240/2, 180/2, 0xFFFF, VRAM);
   //Enter game loop
   while(1) {
-
-
     VCOUNT_WAIT_FOR_NEXT_FRAME();
     boids_phys_tick(&flock);
     boids_paint_frame(&flock, VRAM);

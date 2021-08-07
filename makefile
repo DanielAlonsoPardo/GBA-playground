@@ -14,12 +14,12 @@ ASSEMBLY_FILES := $(SOURCES:$(SRC_DIR)%.c=$(OBJ_DIR)%.s)
 
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
+main.elf: $(OBJECTS)
+	$(CC) $(OBJECTS) -o main.elf $(LDFLAGS) $(DEBUG)
+
 main.gba: main.elf
 	arm-none-eabi-objcopy -v -O binary main.elf main.gba
 	gbafix main.gba
-
-main.elf: $(OBJECTS)
-	$(CC) $(OBJECTS) -o main.elf $(LDFLAGS) $(DEBUG)
 
 $(OBJECTS): $(OBJ_DIR)%.o : $(SRC_DIR)%.c
 	mkdir -p $(shell dirname $@)

@@ -3,6 +3,9 @@
 
 #include "boids.h"
 #include "geometry.h"
+#include "sine_cosine_lookup.h"
+
+#define BOID_RNG_SEED 0
 
 void steer_boids(Boid_flock* flock) {
   for (int i = 0; i < flock->n; i++) {
@@ -10,6 +13,17 @@ void steer_boids(Boid_flock* flock) {
   }
 }
 
+void init_boid_all(Boid_flock* flock) {
+  //seed the rng
+  srand(BOID_RNG_SEED);
+
+  //initialize all boids
+  for (int i = 0; i < flock->n; i++) {
+    init_boid(&flock->boids[i]);
+  }
+
+  init_lookup_tables();
+}
 
 void move_boids(Boid_flock* flock) {
   for (int i = 0; i < flock->n; i++) {
@@ -20,8 +34,8 @@ void move_boids(Boid_flock* flock) {
     boid->last_position.y = boid->position.y;
 
     //Calc new position
-    double x = boid->position.x + boid->speed * cos(boid->direction);
-    double y = boid->position.y + boid->speed * sin(boid->direction);
+    double x = boid->position.x + boid->speed * cos_lt(boid->direction);
+    double y = boid->position.y + boid->speed * sin_lt(boid->direction);
     //Enforce torus rules
     if (x > GBA_SCREEN_WIDTH)
       x -= GBA_SCREEN_WIDTH;
@@ -56,8 +70,9 @@ void erase_boids(Boid_flock* flock, Mem_ptr screen) {
 void init_boid(Boid* boid) {
   boid->position.x = boid->last_position.x = (double) (rand()%240);
   boid->position.y = boid->last_position.y = (double) (rand()%180);
-
-  boid->direction = ((double) (rand()%360)) * RADS_PER_DEGREE;
+  //choose an angle whose sine/cosine has already been precalculated
+  //See sine_cosine_lookup.h
+  boid->direction = (rand()%LOOKUP_TABLE_SIZE);
   boid->speed = DEFAULT_BOID_SPEED;
   boid->color = 0xFFFF;
 }

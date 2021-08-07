@@ -3,7 +3,6 @@
 
 #include "hardware_consts/gba_memory_map.h"
 
-#define RADS_PER_DEGREE 0.0174533
 #define DEFAULT_BOID_SPEED 1.0
 
 typedef struct VECTOR{
@@ -14,15 +13,20 @@ typedef struct VECTOR{
 typedef struct BOID{
   Vector position; // Current position of this boid. Should always be within gameboy screen bounds.
   Vector last_position; // Position of the boid during the previous tick. Used for erasing boids.
-  double direction; // In radians
+  short direction; // In "turn amounts". See sine_cosine_lookup.h.
   double speed; // In pixels per tick
   short color;
 } Boid;
 
 typedef struct BOID_FLOCK{
   short n;
-  Boid* boids;
+  Boid* boids; //Array of boids of length n
 } Boid_flock;
+
+/*** init_boid_all
+ * Initializes everything used by boid physics
+ */
+void init_boid_all(Boid_flock* flock);
 
 /** steerBoids
   Takes an array of boids and changes the direction according to 
