@@ -5,7 +5,8 @@ CC := arm-none-eabi-gcc
 OPTIMIZE := -O2
 DEBUG := -g
 CFLAGS  := -mthumb-interwork -mthumb -Wall
-LDFLAGS := -mthumb-interwork -mthumb -specs=gba.specs 
+LDFLAGS := -mthumb-interwork -mthumb -specs=gba.specs -lm
+#possibly only link -lm on certain files?
 
 SOURCES := $(shell find $(SRC_DIR) -type f -name '*.c')
 OBJECTS := $(SOURCES:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)

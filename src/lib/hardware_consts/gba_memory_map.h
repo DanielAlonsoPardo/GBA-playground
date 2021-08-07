@@ -39,6 +39,8 @@
 #define OBJ_PALETTE_ADDR        0x05000000
 #define OBJ_PALETTE_END_ADDR    0x050003FF
 // Video
+#define GBA_SCREEN_WIDTH        240
+#define GBA_SCREEN_HEIGHT       180
 #define VRAM_ADDR               0x06000000
 #define VRAM_END_ADDR           0x06017FFF
 //Object Attribute Memory

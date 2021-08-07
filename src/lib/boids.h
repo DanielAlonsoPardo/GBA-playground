@@ -1,0 +1,57 @@
+#ifndef BOIDS_HEADER_GUARD
+#define BOIDS_HEADER_GUARD
+
+#include "hardware_consts/gba_memory_map.h"
+
+#define RADS_PER_DEGREE 0.0174533
+#define DEFAULT_BOID_SPEED 1.0
+
+typedef struct VECTOR{
+  double x;
+  double y;
+} Vector;
+
+typedef struct BOID{
+  Vector position;
+  double direction; // in radians
+  double speed; // in pixels
+  short color;
+} Boid;
+
+typedef struct BOID_FLOCK{
+  short n;
+  Boid* boids;
+} Boid_flock;
+
+/** steerBoids
+  Takes an array of boids and changes the direction according to 
+  its environment and ai.
+ */
+void steer_boids(Boid_flock* flock);
+
+/*** moveBoids
+ * Updates position of each boid according to its speed and direction
+ */
+void move_boids(Boid_flock* flock);
+
+/*** paintBoids
+ * Paints every boid onto VRAM
+ */
+void paint_boids(Boid_flock* flock, Mem_ptr screen);
+
+/*** eraseBoids
+ * Paints every boid black. Assumes black background.
+ */
+void erase_boids(Boid_flock* flock, Mem_ptr screen);
+
+/*** initBoid
+ * Initializes a Boid structure with random properties.
+ */
+void init_boid(Boid* boid);
+
+/*** phys_tick
+ * Performs one tick of the "physics" engine
+ */
+void boids_phys_tick(Boid_flock* flock, Mem_ptr screen);
+
+#endif
