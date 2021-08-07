@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include "geometry.h"
+#include "geometry_MODE3.h"
 
 void draw_pixel(short x, short y, short color, Mem_ptr screen) {
-  if (x >= 0 && x < 240 && y >= 0 && y < 180) //must be inside screen
+  if (x >= 0 && x < 240 && y >= 0 && y < 160) //must be inside screen
     screen[pos(x, y)] = color;
 }
 

@@ -3,9 +3,9 @@
 #include "lib/hardware_consts/gba_memory_map.h"
 #include "lib/hardware_consts/gba_io_registers.h"
 #include "lib/boids.h"
-#include "lib/geometry.h"
+#include "lib/geometry_MODE3.h"
 
-#define MAX_BOIDS 50
+#define MAX_BOIDS 100
 
 int main(void) {
   const Mem_ptr VRAM = (unsigned short*)VRAM_ADDR;

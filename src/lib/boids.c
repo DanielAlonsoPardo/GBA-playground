@@ -2,7 +2,7 @@
 #include <math.h>
 
 #include "boids.h"
-#include "geometry.h"
+#include "geometry_MODE3.h"
 #include "sine_cosine_lookup.h"
 
 #define BOID_RNG_SEED 0
@@ -37,15 +37,15 @@ void move_boids(Boid_flock* flock) {
     double x = boid->position.x + boid->speed * cos_lt(boid->direction);
     double y = boid->position.y + boid->speed * sin_lt(boid->direction);
     //Enforce torus rules
-    if (x > GBA_SCREEN_WIDTH)
-      x -= GBA_SCREEN_WIDTH;
+    if (x > MODE3_SCREENWIDTH)
+      x -= MODE3_SCREENWIDTH;
     else if (x < 0)
-      x += GBA_SCREEN_WIDTH;
+      x += MODE3_SCREENWIDTH;
 
-    if (y > GBA_SCREEN_HEIGHT)
-      y -= GBA_SCREEN_HEIGHT;
+    if (y > MODE3_SCREENHEIGHT)
+      y -= MODE3_SCREENHEIGHT;
     else if (y < 0)
-      y += GBA_SCREEN_HEIGHT;
+      y += MODE3_SCREENHEIGHT;
 
     //Set new position
     boid->position.x = x;
@@ -69,7 +69,7 @@ void erase_boids(Boid_flock* flock, Mem_ptr screen) {
 
 void init_boid(Boid* boid) {
   boid->position.x = boid->last_position.x = (double) (rand()%240);
-  boid->position.y = boid->last_position.y = (double) (rand()%180);
+  boid->position.y = boid->last_position.y = (double) (rand()%160);
   //choose an angle whose sine/cosine has already been precalculated
   //See sine_cosine_lookup.h
   boid->direction = (rand()%LOOKUP_TABLE_SIZE);
