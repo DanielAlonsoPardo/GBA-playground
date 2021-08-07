@@ -51,7 +51,6 @@
 #define GAME_PAK_SRAM_ADDR      0x0E000000
 #define GAME_PAK_SRAM_END_ADDR  0x0E00FFFF
 
-
-
+typedef volatile unsigned short * Mem_ptr;
  
 #endif

@@ -10,7 +10,7 @@ int main(void) {
   //Set video mode
   SET_VIDEO_MODE_3();
 
-  volatile unsigned short* const VRAM = (unsigned short*)VRAM_ADDR;
+  Mem_ptr const VRAM = (unsigned short*)VRAM_ADDR;
 
   #define MAX_LINES 30
   struct Line {

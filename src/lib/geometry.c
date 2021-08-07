@@ -1,19 +1,19 @@
 #include <stdlib.h>
 #include "geometry.h"
 
-void draw_pixel(short x, short y, short color, volatile unsigned short* screen) {
+void draw_pixel(short x, short y, short color, Mem_ptr screen) {
   if (x >= 0 && x < 240 && y >= 0 && y < 180) //must be inside screen
     screen[pos(x, y)] = color;
 }
 
-void draw_around_pixel(short x, short y, short color, volatile unsigned short* screen) {
+void draw_around_pixel(short x, short y, short color, Mem_ptr screen) {
   for (int i = -1; i < 2; i++)
     for (int j = -1; j < 2; j++)
       if (j != 0 || i != 0)
         draw_pixel(x + i, y + j, color, screen);
 }
 
-void draw_line(short x1, short y1, short x2, short y2, short color, volatile unsigned short* screen) {
+void draw_line(short x1, short y1, short x2, short y2, short color, Mem_ptr screen) {
 
   draw_pixel(x1, y1, color, screen);
 

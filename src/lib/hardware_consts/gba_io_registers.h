@@ -1,6 +1,7 @@
 #ifndef GBA_IO_REGISTERS
 #define GBA_IO_REGISTERS
 
+#include "gba_memory_map.h"
 
 #define IO_REGISTERS_DISPCNT_ADDR  IO_REGISTERS_ADDR + 0x0
 #define IO_REGISTERS_VCOUNT_ADDR   IO_REGISTERS_ADDR + 0x6
@@ -20,7 +21,7 @@
 
 #define DISPCNT_BG_MODE_3 0x3
 
-#define SET_VIDEO_MODE_3() (*((volatile unsigned short *)(IO_REGISTERS_DISPCNT_ADDR))) = (DISPCNT_BG_MODE_3 | DISPCNT_DISPLAY_BG2)
+#define SET_VIDEO_MODE_3() (*((Mem_ptr)(IO_REGISTERS_DISPCNT_ADDR))) = (DISPCNT_BG_MODE_3 | DISPCNT_DISPLAY_BG2)
 
 
 /* VCOUNT Utils */
@@ -34,7 +35,7 @@
 
 /* KEYINPUT Masks/Utils */
 
-#define GET_KEYINPUT(mask) (~(*((volatile unsigned short *)(IO_REGISTERS_KEYINPUT_ADDR))) & mask)
+#define GET_KEYINPUT(mask) (~(*((Mem_ptr)(IO_REGISTERS_KEYINPUT_ADDR))) & mask)
 
 // 0 means pressed, 1 means released
 #define KEYINPUT_A        0x0001
