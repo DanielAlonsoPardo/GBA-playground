@@ -45,8 +45,9 @@ int main(void) {
       dispcnt &= ~DISPCNT_DISPLAY_FRAME_SELECT;
     (*((Mem_ptr)(IO_REGISTERS_DISPCNT_ADDR))) = dispcnt;
 
-    boids_phys_tick(&flock);
-    boids_paint_frame(&flock, page ? PAGE2 : PAGE1);
+    erase_boids(&flock, page ? PAGE1 : PAGE2);
+    boids_phys_tick(&flock); 
+    paint_boids(&flock, page ? PAGE1 : PAGE2);
   }
 
   return 0;
