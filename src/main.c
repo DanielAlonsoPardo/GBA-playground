@@ -24,11 +24,6 @@ int main(void) {
       PALETTE[i] = 0xFFFF;
   }
 
-  //Palette test
-  for (unsigned char i = 0; i < 240; i++) {
-    draw_line(i, 0, i, 159, i, VRAM);
-  }
-
   //Init boids
   Boid boids[MAX_BOIDS];
   Boid_flock flock;
@@ -38,20 +33,20 @@ int main(void) {
 
   //Enter game loop
   char page = 0;
+  unsigned short dispcnt;
   while(1) {
-    VCOUNT_WAIT_FOR_NEXT_FRAME();
+    VCOUNT_WAIT_FOR_VBLANK();
+    page = !page;
+
+    dispcnt = (*((Mem_ptr)(IO_REGISTERS_DISPCNT_ADDR)));
+    if (page)
+      dispcnt |= DISPCNT_DISPLAY_FRAME_SELECT;
+    else
+      dispcnt &= ~DISPCNT_DISPLAY_FRAME_SELECT;
+    (*((Mem_ptr)(IO_REGISTERS_DISPCNT_ADDR))) = dispcnt;
 
     boids_phys_tick(&flock);
-//    page = !page;
     boids_paint_frame(&flock, page ? PAGE2 : PAGE1);
-/*
-    short a = (*((Mem_ptr)(IO_REGISTERS_DISPCNT_ADDR)));
-    if (page)
-      a = a | DISPCNT_DISPLAY_FRAME_SELECT;
-    else
-      a = a & ~DISPCNT_DISPLAY_FRAME_SELECT;
-    (*((Mem_ptr)(IO_REGISTERS_DISPCNT_ADDR))) = a;
-*/
   }
 
   return 0;

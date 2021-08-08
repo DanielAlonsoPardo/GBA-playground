@@ -34,6 +34,10 @@
   while(*((volatile unsigned char *) (IO_REGISTERS_VCOUNT_ADDR)) < 160);\
 }
 
+#define VCOUNT_WAIT_FOR_VBLANK() {\
+  while(*((volatile unsigned char *) (IO_REGISTERS_VCOUNT_ADDR)) < 160);\
+}
+
 
 /* KEYINPUT Masks/Utils */
 
