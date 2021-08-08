@@ -41,9 +41,12 @@
 // Video
 #define MODE3_SCREENWIDTH       240
 #define MODE3_SCREENHEIGHT      160
-#define MODE4
+#define MODE4_SCREENWIDTH       240
+#define MODE4_SCREENHEIGHT      160
 
 #define VRAM_ADDR               0x06000000
+#define VRAM_MODE4_PAGE1        0x06000000
+#define VRAM_MODE4_PAGE2        0x0600A000
 #define VRAM_END_ADDR           0x06017FFF
 //Object Attribute Memory
 #define OAM_ADDR                0x07000000

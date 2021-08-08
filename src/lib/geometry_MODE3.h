@@ -7,8 +7,8 @@
 
 #define pos(x, y) ((x) + (y)*240)
 
-void draw_pixel(short x, short y, short color, Mem_ptr screen);
-void draw_around_pixel(short x, short y, short color, Mem_ptr screen);
-void draw_line(short x1, short y1, short x2, short y2, short color, Mem_ptr screen);
+void draw_pixel_M3(short x, short y, short color, Mem_ptr screen);
+void draw_around_pixel_M3(short x, short y, short color, Mem_ptr screen);
+void draw_line_M3(short x1, short y1, short x2, short y2, short color, Mem_ptr screen);
  
 #endif

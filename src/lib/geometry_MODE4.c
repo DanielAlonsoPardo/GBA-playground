@@ -1,21 +1,32 @@
 #include <stdlib.h>
-#include "geometry_MODE3.h"
+#include "geometry_MODE4.h"
 
-void draw_pixel_M3(short x, short y, short color, Mem_ptr screen) {
-  if (x >= 0 && x < 240 && y >= 0 && y < 160) //must be inside screen
-    screen[pos(x, y)] = color;
+void draw_pixel(short x, short y, char color, Mem_ptr screen) {
+  short pos = pos(x,y) >> 1;
+
+  //only attempt to draw a pixel that is inside the screen
+  if (!(x >= 0 && x < MODE4_SCREENWIDTH &&
+      y >= 0 && y < MODE4_SCREENHEIGHT))
+    return;
+
+  unsigned short two_pixels = screen[pos];
+  if (x & 1)
+    screen[pos] = (color << 8) + (two_pixels & 0x00FF);
+  else
+    screen[pos] = color + (two_pixels & 0xFF00);
+
 }
 
-void draw_around_pixel_M3(short x, short y, short color, Mem_ptr screen) {
+void draw_around_pixel(short x, short y, char color, Mem_ptr screen) {
   for (int i = -1; i < 2; i++)
     for (int j = -1; j < 2; j++)
       if (j != 0 || i != 0)
-        draw_pixel_M3(x + i, y + j, color, screen);
+        draw_pixel(x + i, y + j, color, screen);
 }
 
-void draw_line_M3(short x1, short y1, short x2, short y2, short color, Mem_ptr screen) {
+void draw_line(short x1, short y1, short x2, short y2, char color, Mem_ptr screen) {
 
-  draw_pixel_M3(x1, y1, color, screen);
+  draw_pixel(x1, y1, color, screen);
 
   // Choose what directions to nudge the brush in
   short diff_x = x2 - x1;
@@ -75,7 +86,7 @@ void draw_line_M3(short x1, short y1, short x2, short y2, short color, Mem_ptr s
       brush_angle += brush_angle_increase;
       true_angle += true_angle_increase;
     }
-    draw_pixel_M3(brush_x, brush_y, color, screen);
+    draw_pixel(brush_x, brush_y, color, screen);
   }
 
 }

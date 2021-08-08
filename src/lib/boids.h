@@ -15,7 +15,7 @@ typedef struct BOID{
   Vector last_position; // Position of the boid during the previous tick. Used for erasing boids.
   short direction; // In "turn amounts". See sine_cosine_lookup.h.
   double speed; // In pixels per tick
-  short color;
+  char color;
 } Boid;
 
 typedef struct BOID_FLOCK{
