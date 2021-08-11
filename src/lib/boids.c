@@ -4,14 +4,11 @@
 #include "boids.h"
 #include "geometry_MODE4.h"
 #include "sine_cosine_lookup.h"
+#include "utils.h"
 
 #define BOID_RNG_SEED 0
 
-void steer_boids(Boid_flock* flock) {
-  for (int i = 0; i < flock->n; i++) {
-
-  }
-}
+void boid_ai(Boid_flock* flock) {}
 
 void init_boid_all(Boid_flock* flock) {
   //seed the rng
@@ -36,20 +33,10 @@ void move_boids(Boid_flock* flock) {
     //Calc new position
     double x = boid->position.x + boid->speed * cos_lt(boid->direction);
     double y = boid->position.y + boid->speed * sin_lt(boid->direction);
-    //Enforce torus rules
-    if (x > MODE4_SCREENWIDTH)
-      x -= MODE4_SCREENWIDTH;
-    else if (x < 0)
-      x += MODE4_SCREENWIDTH;
-
-    if (y > MODE4_SCREENHEIGHT)
-      y -= MODE4_SCREENHEIGHT;
-    else if (y < 0)
-      y += MODE4_SCREENHEIGHT;
 
     //Set new position
-    boid->position.x = x;
-    boid->position.y = y;
+    boid->position.x = wraparound(x, MODE4_SCREENWIDTH);
+    boid->position.y = wraparound(y, MODE4_SCREENHEIGHT);
   }
 }
 
@@ -81,11 +68,41 @@ void init_boid(Boid* boid) {
  * Performs one tick of the "physics" engine
  */
 void boids_phys_tick(Boid_flock* flock) {
-  steer_boids(flock);
+  boid_ai(flock);
   move_boids(flock);
 }
 
 void boids_paint_frame(Boid_flock* flock, Mem_ptr screen) {
   erase_boids(flock, screen); 
   paint_boids(flock, screen);
+}
+
+/*** iterate_direction_offsets
+ * Returns, in turn amounts, the offset in direction corresponding to the current iteration.
+ * The maximum number of iterations is equals to RAYS_IN_VIEW_CONE.
+ * Offsets are iterated through by ascending distance from preferred_offset out.
+ * 
+ * preferred_offset is the difference between a previously chosen preferred direction and the current direction of boid
+ * calculate regime_limit with calc_regime_limit
+ */
+short iterate_direction_offsets(short current_iteration, short preferred_offset, short regime_limit) {
+  if (current_iteration < regime_limit) {
+    //zigzag regime
+    if (current_iteration & 1) {
+      return  ((current_iteration + 1 ) >> 1) + preferred_offset;
+    } else {
+      return -( current_iteration       >> 1) + preferred_offset;
+    }
+  } else {
+    //straight regime
+    if (preferred_offset > 0) {
+      return current_iteration - (RAYS_IN_VIEW_CONE >> 1);
+    } else {
+      return -(current_iteration - (RAYS_IN_VIEW_CONE >> 1));
+    }
+  }
+}
+
+short calc_regime_limit(short offset_from_center) {
+  return ((RAYS_IN_VIEW_CONE >> 1) - abs(offset_from_center)) * 2 + 1;
 }
